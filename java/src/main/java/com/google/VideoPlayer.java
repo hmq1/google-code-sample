@@ -321,7 +321,15 @@ public class VideoPlayer {
   }
 
   public void deletePlaylist(String playlistName) {
-	  if (playlists.contains(playlistName)) {
+	  
+	  Boolean samePlaylistFound = false;
+	  for (String playlist: playlists) {
+		  while (!samePlaylistFound) {
+			  samePlaylistFound = playlist.equalsIgnoreCase(playlistName);
+		  }
+	  }
+	  
+	  if (samePlaylistFound) {
 		  System.out.println("Deleted playlist: " + playlistName);
 		  playlists.remove(playlistName);
 	  }
