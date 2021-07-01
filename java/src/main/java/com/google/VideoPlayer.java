@@ -225,9 +225,19 @@ public class VideoPlayer {
 		  System.out.println("No video is currently playing");
 	  }
   }
-
+  
+  ArrayList<String> playlists = new ArrayList<String>();
+  ArrayList<String> playlists_modified = new ArrayList<String>();
+  
   public void createPlaylist(String playlistName) {
-    System.out.println("createPlaylist needs implementation");
+	  if (playlists_modified.contains(playlistName.toLowerCase())) {
+		  System.out.println("Cannot create playlist: A playlist with the same name already exists");
+	  }
+	  else if (!playlists_modified.contains(playlistName.toLowerCase())) {
+		  System.out.println("Successfully created new playlist: " + playlistName);
+		  playlists.add(playlistName);
+		  playlists_modified.add(playlistName.toLowerCase());
+	  }
   }
 
   public void addVideoToPlaylist(String playlistName, String videoId) {
