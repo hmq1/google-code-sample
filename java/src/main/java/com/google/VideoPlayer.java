@@ -4,10 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class VideoPlayer {
@@ -61,7 +64,6 @@ public class VideoPlayer {
   
   Boolean videoPlaying = false;
   String currentlyPlaying = "";
-  Map<String, String> map = new HashMap<String, String>();
   
   public void playVideo(String videoId) {	  
 	  String filePath = "src/main/resources/videos.txt";
@@ -69,6 +71,8 @@ public class VideoPlayer {
 	  try {
 		    FileReader reader = new FileReader(filePath);
 		    BufferedReader bufferedReader = new BufferedReader(reader);
+		    
+		    Map<String, String> map = new HashMap<String, String>();
 
 		    String line = bufferedReader.readLine();
 
@@ -241,6 +245,7 @@ public class VideoPlayer {
 	  }
   }
   
+  // Note: Not handling case of duplicate video in playlist
   public void addVideoToPlaylist(String playlistName, String videoId) {	  
 	  Boolean playlistExists = playlists_modified.contains(playlistName.toLowerCase());
 	  
@@ -250,6 +255,9 @@ public class VideoPlayer {
 		    FileReader reader = new FileReader(filePath);
 		    BufferedReader bufferedReader = new BufferedReader(reader);
 
+		    Map<String, String> map = new HashMap<String, String>();
+		    Map<String, String> map_playlistVideos = new HashMap<String, String>();
+		    
 		    String line = bufferedReader.readLine();
 
 		    while (line != null) {
@@ -265,6 +273,7 @@ public class VideoPlayer {
 		    reader.close();
 		    
 		    Boolean videoExists = map.containsKey(videoId);
+		    //Boolean duplicateVideo = map_playlistVideos.
 		    
 		    if (!playlistExists) {
 				System.out.println("Cannot add video to " + playlistName + ": Playlist does not exist");
@@ -273,6 +282,7 @@ public class VideoPlayer {
 				System.out.println("Cannot add video to " + playlistName + ": Video does not exist");
 			}
 			else if (playlistExists && videoExists) {
+				map_playlistVideos.put(playlistName, map.get(videoId));
 				System.out.println("Added video to " + playlistName + ": " + map.get(videoId));
 			}
 
@@ -284,7 +294,18 @@ public class VideoPlayer {
   }
 
   public void showAllPlaylists() {
-    System.out.println("showAllPlaylists needs implementation");
+	  if (playlists.isEmpty()) {
+		  System.out.println("No playlists exist yet");
+	  }
+	  else {
+		  System.out.println("Showing all playlists:");
+		  
+		  Collections.sort(playlists, String.CASE_INSENSITIVE_ORDER);
+		  
+		  for (String playlist : playlists) {
+			  System.out.println(playlist.replaceAll("(?m)^", "\t"));
+		  }
+	  }
   }
 
   public void showPlaylist(String playlistName) {
