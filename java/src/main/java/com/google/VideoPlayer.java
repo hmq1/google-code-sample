@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -339,7 +340,51 @@ public class VideoPlayer {
   }
 
   public void searchVideos(String searchTerm) {
-    System.out.println("searchVideos needs implementation");
+	  
+	  System.out.println("Here are the results for " + searchTerm + ":");
+
+	  String filePath = "src/main/resources/videos.txt";
+	  int counter = 1;
+	  
+	  try {
+		    FileReader reader = new FileReader(filePath);
+		    BufferedReader bufferedReader = new BufferedReader(reader);
+
+		    String line = bufferedReader.readLine();
+
+		    while (line != null) {
+		    	String [] videoDetails = line.split(Pattern.quote("|"));
+		    	
+		    	Boolean relevantSearch = videoDetails[0].toLowerCase().contains(searchTerm.toLowerCase());
+		    	if (relevantSearch) {
+		    		String output = counter + ") " + videoDetails[0].strip() + " (" + videoDetails[1].strip() + ") " + "[" + videoDetails[2].strip() + "]";
+		    		System.out.println(output.replaceAll("(?m)^", "\t"));
+		    		counter++;    		
+		    		
+		    	}
+		    	
+		    	line = bufferedReader.readLine();
+		    }
+		    reader.close();
+		    
+		    System.out.println("Would you like to play any of the above? If yes, specify the number of the video.");
+    		System.out.println("If your answer is not a valid number, we will assume it's a no.");
+	    	
+	    	Scanner scan = new Scanner(System.in);
+    		String input = scan.next();
+    		Boolean validNumber = (Integer.parseInt(input) <= counter) && (Integer.parseInt(input) > 0);
+    		
+    		if (validNumber) {
+    			System.out.println("Playing video: ");
+    		}
+    		
+    		scan.close();
+
+		   } catch (IOException e) {
+		    e.printStackTrace();
+		   }
+	  
+	  //System.out.println("searchVideos needs implementation");
   }
 
   public void searchVideosWithTag(String videoTag) {
